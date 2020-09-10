@@ -1,8 +1,10 @@
 package com.curry.sldemo.service;
 
+import com.curry.sldemo.model.PeopleResponseModel;
+
 import java.util.List;
 
 public interface PeopleService {
 
-    List<String> getPeople();
+    PeopleResponseModel getPeople(int page);
 }

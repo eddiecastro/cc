@@ -1,5 +1,15 @@
 package com.curry.sldemo.model;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 public class Person {
-    //name, email address, and job title
+
+    @JsonProperty("display_name")
+    String displayName;
+
+    @JsonProperty("email_address")
+    String emailAddress;
+
+    @JsonProperty("title")
+    String jobTitle;
 }
