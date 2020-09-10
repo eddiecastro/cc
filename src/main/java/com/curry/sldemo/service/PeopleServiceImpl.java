@@ -16,7 +16,7 @@ public class PeopleServiceImpl implements PeopleService {
     @Value("${SL_DEMO_API_KEY}")
     private String apiKey;
 
-    @Value("${SL_DEMO_API_URL}")
+    @Value("${api.endpoint.url}")
     String apiUrl;
 
     private RestTemplate restTemplate;
