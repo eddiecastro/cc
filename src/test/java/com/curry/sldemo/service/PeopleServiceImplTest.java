@@ -18,6 +18,7 @@ import static org.mockito.MockitoAnnotations.initMocks;
 public class PeopleServiceImplTest {
 
     private static final int REQUESTED_PAGE = 1;
+    private static final int PAGE_SIZE = 100;
     private static final String API_URL = "http://localhost";
 
     @Mock
@@ -41,7 +42,7 @@ public class PeopleServiceImplTest {
         when(restTemplate.exchange(anyString(), any(HttpMethod.class), any(), any(Class.class)))
                 .thenReturn(responseModel);
 
-        PeopleResponseModel actual = systemUnderTest.getPeople(REQUESTED_PAGE);
+        PeopleResponseModel actual = systemUnderTest.getPeople(REQUESTED_PAGE, PAGE_SIZE);
         assertEquals(actual, expected);
     }
 }

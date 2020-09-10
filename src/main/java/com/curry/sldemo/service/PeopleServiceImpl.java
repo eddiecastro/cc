@@ -11,7 +11,6 @@ import org.springframework.web.util.UriComponentsBuilder;
 public class PeopleServiceImpl implements PeopleService {
 
     private final static String API_ENDPOINT = "/people.json";
-    private final static Integer PAGE_SIZE = 25; //TODO: could let react app control this
 
     @Value("${SL_DEMO_API_KEY}")
     private String apiKey;
@@ -26,9 +25,9 @@ public class PeopleServiceImpl implements PeopleService {
     }
 
     @Override
-    public PeopleResponseModel getPeople(int requestedPage) {
+    public PeopleResponseModel getPeople(int requestedPage, int pageSize) {
         ResponseEntity<PeopleResponseModel> response = restTemplate.exchange(
-                buildUrlWithParameters(apiUrl + API_ENDPOINT, requestedPage),
+                buildUrlWithParameters(apiUrl + API_ENDPOINT, requestedPage, pageSize),
                 HttpMethod.GET,
                 getHttpEntity(),
                 PeopleResponseModel.class
@@ -48,11 +47,11 @@ public class PeopleServiceImpl implements PeopleService {
         return new HttpEntity(headers);
     }
 
-    private String buildUrlWithParameters(String url, int requestedPage) {
+    private String buildUrlWithParameters(String url, int requestedPage, int pageSize) {
         UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(url)
                 .queryParam("include_paging_counts", true)
                 .queryParam("page", requestedPage)
-                .queryParam("per_page", PAGE_SIZE);
+                .queryParam("per_page", pageSize);
 
         return builder.toUriString();
     }

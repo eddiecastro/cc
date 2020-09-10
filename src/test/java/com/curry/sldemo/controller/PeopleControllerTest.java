@@ -19,7 +19,11 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @WebMvcTest(PeopleController.class)
 public class PeopleControllerTest {
 
-    private static final int REQUESTED_PAGE = 1;
+    private static final int PAGE_SIZE_BELOW_MIN = 0;
+    private static final int PAGE_SIZE_ABOVE_MAX = 101;
+    private static final int INVALID_PAGE_NUMBER = 0;
+    private static final int VALID_PAGE_NUMBER = 1;
+    private static final int VALID_PAGE_SIZE = 100;
 
     @MockBean
     PeopleService peopleService;
@@ -29,9 +33,12 @@ public class PeopleControllerTest {
 
     @Test
     public void testGetPeopleList() throws Exception {
-        when(peopleService.getPeople(REQUESTED_PAGE)).thenReturn(new PeopleResponseModel());
+        when(peopleService.getPeople(VALID_PAGE_NUMBER, VALID_PAGE_SIZE)).thenReturn(new PeopleResponseModel());
 
-        MvcResult result = mockMvc.perform(get("/people").param("page", "1"))
+        MvcResult result = mockMvc.perform(
+                get("/people")
+                    .queryParam("page", String.valueOf(VALID_PAGE_NUMBER))
+                    .queryParam("page_size", String.valueOf(VALID_PAGE_SIZE)))
                 .andExpect(status().isOk())
                 .andReturn();
 
@@ -40,7 +47,43 @@ public class PeopleControllerTest {
                 result.getResponse().getContentAsString(),
                 new TypeReference<>() {});
 
-        verify(peopleService).getPeople(REQUESTED_PAGE);
+        verify(peopleService).getPeople(VALID_PAGE_NUMBER, VALID_PAGE_SIZE);
         assertNotNull(response);
+    }
+
+    @Test
+    public void testGetPeopleList_pageSizeExceedsMaximum() throws Exception {
+        MvcResult result = mockMvc.perform(
+                get("/people")
+                    .queryParam("page", String.valueOf(VALID_PAGE_NUMBER))
+                    .queryParam("page_size", String.valueOf(PAGE_SIZE_ABOVE_MAX)))
+                .andExpect(status().isBadRequest())
+                .andReturn();
+
+        verify(peopleService, never()).getPeople(anyInt(), anyInt());
+    }
+
+    @Test
+    public void testGetPeopleList_pageSizeBelowMinimum() throws Exception {
+        MvcResult result = mockMvc.perform(
+                get("/people")
+                        .queryParam("page", String.valueOf(VALID_PAGE_NUMBER))
+                        .queryParam("page_size", String.valueOf(PAGE_SIZE_BELOW_MIN)))
+                .andExpect(status().isBadRequest())
+                .andReturn();
+
+        verify(peopleService, never()).getPeople(anyInt(), anyInt());
+    }
+
+    @Test
+    public void testGetPeopleList_invalidPageNumber() throws Exception {
+        MvcResult result = mockMvc.perform(
+                get("/people")
+                        .queryParam("page", String.valueOf(INVALID_PAGE_NUMBER))
+                        .queryParam("page_size", String.valueOf(VALID_PAGE_SIZE)))
+                .andExpect(status().isBadRequest())
+                .andReturn();
+
+        verify(peopleService, never()).getPeople(anyInt(), anyInt());
     }
 }
