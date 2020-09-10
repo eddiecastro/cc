@@ -15,13 +15,17 @@ class PeopleList extends React.Component {
       
       return (
         <div className={styles.PeopleList} data-testid="PeopleList">
-          <table border="1px solid black" border-spacing="0"> 
-            <tr align="left">
-              <th>Name</th>
-              <th>Email</th>
-              <th>Title</th>
-            </tr>
-            {peopleList}
+          <table> 
+            <thead>
+              <tr align="left">
+                <th>Name</th>
+                <th>Email</th>
+                <th>Title</th>
+              </tr>
+            </thead>
+            <tbody>
+              {peopleList}
+            </tbody>
           </table>
         </div>
       );

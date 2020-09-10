@@ -11,6 +11,7 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 
+import static org.junit.Assert.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
@@ -53,6 +54,8 @@ public class PeopleControllerTest {
 
     @Test
     public void testGetPeopleList_pageSizeExceedsMaximum() throws Exception {
+        String expectedErrorMessage = "Invalid page size provided";
+
         MvcResult result = mockMvc.perform(
                 get("/people")
                     .queryParam("page", String.valueOf(VALID_PAGE_NUMBER))
@@ -60,11 +63,16 @@ public class PeopleControllerTest {
                 .andExpect(status().isBadRequest())
                 .andReturn();
 
+        String actualErrorMessage = result.getResolvedException().getMessage();
+
+        assertEquals(expectedErrorMessage, actualErrorMessage);
         verify(peopleService, never()).getPeople(anyInt(), anyInt());
     }
 
     @Test
     public void testGetPeopleList_pageSizeBelowMinimum() throws Exception {
+        String expectedErrorMessage = "Invalid page size provided";
+
         MvcResult result = mockMvc.perform(
                 get("/people")
                         .queryParam("page", String.valueOf(VALID_PAGE_NUMBER))
@@ -72,11 +80,15 @@ public class PeopleControllerTest {
                 .andExpect(status().isBadRequest())
                 .andReturn();
 
+        String actualErrorMessage = result.getResolvedException().getMessage();
+
+        assertEquals(expectedErrorMessage, actualErrorMessage);
         verify(peopleService, never()).getPeople(anyInt(), anyInt());
     }
 
     @Test
     public void testGetPeopleList_invalidPageNumber() throws Exception {
+        String expectedErrorMessage = "Invalid page number provided";
         MvcResult result = mockMvc.perform(
                 get("/people")
                         .queryParam("page", String.valueOf(INVALID_PAGE_NUMBER))
@@ -84,6 +96,9 @@ public class PeopleControllerTest {
                 .andExpect(status().isBadRequest())
                 .andReturn();
 
+        String actualErrorMessage = result.getResolvedException().getMessage();
+
+        assertEquals(expectedErrorMessage, actualErrorMessage);
         verify(peopleService, never()).getPeople(anyInt(), anyInt());
     }
 }
