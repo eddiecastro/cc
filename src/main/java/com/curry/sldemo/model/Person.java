@@ -12,4 +12,8 @@ public class Person {
 
     @JsonProperty("title")
     String jobTitle;
+
+    public String getEmailAddress() {
+        return emailAddress;
+    }
 }

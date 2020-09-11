@@ -1,48 +1,80 @@
 package com.curry.sldemo.service;
 
-import com.curry.sldemo.model.PeopleResponseModel;
+import com.curry.sldemo.model.Person;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.springframework.http.HttpMethod;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.client.RestTemplate;
 
-import static org.junit.Assert.assertEquals;
-import static org.mockito.ArgumentMatchers.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+
+import static org.junit.Assert.*;
 import static org.mockito.Mockito.when;
 import static org.mockito.MockitoAnnotations.initMocks;
 
 public class PeopleServiceImplTest {
 
-    private static final int REQUESTED_PAGE = 1;
-    private static final int PAGE_SIZE = 100;
-    private static final String API_URL = "http://localhost";
+    private static final String TEST_EMAIL = "aaAbd@d.co";
+
+    private List<Person> peopleList;
 
     @Mock
-    RestTemplate restTemplate;
+    private Person person;
 
     @InjectMocks
     private PeopleServiceImpl systemUnderTest;
 
     @Before
     public void init() {
-        systemUnderTest = new PeopleServiceImpl(restTemplate);
-        systemUnderTest.apiUrl = API_URL;
+        peopleList = new ArrayList<>();
+        systemUnderTest = new PeopleServiceImpl();
+
         initMocks(this);
+        when(person.getEmailAddress()).thenReturn(TEST_EMAIL);
+        peopleList.add(person);
     }
 
     @Test
-    public void getPeopleTest() {
-        PeopleResponseModel expected = new PeopleResponseModel();
-        ResponseEntity<PeopleResponseModel> responseModel = new ResponseEntity<>(expected, HttpStatus.OK);
+    public void testGetEmailCharacterFrequencyCountFromPeopleList_emptyList() {
+        List<Person> peopleList = new ArrayList<>();
+        Map<String, Integer> result = systemUnderTest.getEmailCharacterFrequencyCountFromPeopleList(peopleList);
 
-        when(restTemplate.exchange(anyString(), any(HttpMethod.class), any(), any(Class.class)))
-                .thenReturn(responseModel);
+        assertNotNull(result);
+        assertTrue(result.keySet().isEmpty());
+    }
 
-        PeopleResponseModel actual = systemUnderTest.getPeople(REQUESTED_PAGE, PAGE_SIZE);
-        assertEquals(actual, expected);
+    @Test
+    public void testGetEmailCharacterFrequencyCountFromPeopleList_captialAndNonCapitalAreUnique() {
+        int expectedACount = 2;
+        int expectedCapitalACount = 1;
+
+        Map<String, Integer> result = systemUnderTest.getEmailCharacterFrequencyCountFromPeopleList(peopleList);
+
+        assertEquals((int)result.get("a"), expectedACount);
+        assertEquals((int)result.get("A"), expectedCapitalACount);
+    }
+
+    @Test
+    public void testGetEmailCharacterFrequencyCountFromPeopleList_symbolsAreCounted() {
+        int expectedAtSymbolCount = 1;
+        int expectedPeriodCount = 1;
+
+        Map<String, Integer> result = systemUnderTest.getEmailCharacterFrequencyCountFromPeopleList(peopleList);
+
+        assertEquals((int)result.get("@"), expectedAtSymbolCount);
+        assertEquals((int)result.get("."), expectedPeriodCount);
+    }
+
+    @Test
+    public void testGetEmailCharacterFrequencyCountFromPeopleList_bothSidesOfAtSymbolAreCounted() {
+        int expectedCCount = 1;
+        int expectedDCount = 2;
+
+        Map<String, Integer> result = systemUnderTest.getEmailCharacterFrequencyCountFromPeopleList(peopleList);
+
+        assertEquals((int)result.get("c"), expectedCCount);
+        assertEquals((int)result.get("d"), expectedDCount);
     }
 }

@@ -1,58 +1,38 @@
 package com.curry.sldemo.service;
 
-import com.curry.sldemo.model.PeopleResponseModel;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.http.*;
+import com.curry.sldemo.model.Person;
 import org.springframework.stereotype.Service;
-import org.springframework.web.client.RestTemplate;
-import org.springframework.web.util.UriComponentsBuilder;
+
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 @Service
 public class PeopleServiceImpl implements PeopleService {
 
-    private final static String API_ENDPOINT = "/people.json";
-
-    @Value("${SL_DEMO_API_KEY}")
-    private String apiKey;
-
-    @Value("${api.endpoint.url}")
-    String apiUrl;
-
-    private RestTemplate restTemplate;
-
-    public PeopleServiceImpl(RestTemplate restTemplate) {
-        this.restTemplate = restTemplate;
-    }
-
     @Override
-    public PeopleResponseModel getPeople(int requestedPage, int pageSize) {
-        ResponseEntity<PeopleResponseModel> response = restTemplate.exchange(
-                buildUrlWithParameters(apiUrl + API_ENDPOINT, requestedPage, pageSize),
-                HttpMethod.GET,
-                getHttpEntity(),
-                PeopleResponseModel.class
-        );
+    public Map<String, Integer> getEmailCharacterFrequencyCountFromPeopleList(List<Person> peopleList) {
+        HashMap<String, Integer> frequencyMap = new HashMap<>();
 
-        return response.getBody();
+        for(Person person : peopleList) {
+            processEmail(frequencyMap, person.getEmailAddress());
+        }
+
+        return frequencyMap;
     }
 
-    //TODO: this, apiUrl, and apiKey could be placed in a shared place with ClientHttpRequestInterceptor if a second controller is needed
-    //TODO: at the very least these could be placed in a baseController class, they don't belong here
-    private HttpEntity getHttpEntity() {
-        HttpHeaders headers = new HttpHeaders();
-        headers.set("Accept", MediaType.APPLICATION_JSON_VALUE);
-        headers.setContentType(MediaType.APPLICATION_JSON);
-        headers.add( "Authorization", "Bearer " + apiKey);
+    private void processEmail(HashMap<String, Integer> frequencyMap, String emailAddress) {
+        for(int i = 0; i < emailAddress.length(); i++) {
+            //NOTE: the assignment only said unique "character", so I'm leaving the count of symbols in the
+            //frequency map and letting capitial and non capital be unique characters
+            String letter = String.valueOf(emailAddress.charAt(i));
 
-        return new HttpEntity(headers);
-    }
-
-    private String buildUrlWithParameters(String url, int requestedPage, int pageSize) {
-        UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(url)
-                .queryParam("include_paging_counts", true)
-                .queryParam("page", requestedPage)
-                .queryParam("per_page", pageSize);
-
-        return builder.toUriString();
+            if(frequencyMap.containsKey(letter)) {
+                int currentCount = frequencyMap.get(letter);
+                frequencyMap.put(letter, ++currentCount);
+            } else {
+                frequencyMap.put(letter, 1);
+            }
+        }
     }
 }

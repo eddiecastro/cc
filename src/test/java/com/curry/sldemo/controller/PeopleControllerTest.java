@@ -1,15 +1,21 @@
 package com.curry.sldemo.controller;
 
 import com.curry.sldemo.model.PeopleResponseModel;
-import com.curry.sldemo.service.PeopleService;
+import com.curry.sldemo.service.PeopleRestService;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
+import org.springframework.web.bind.annotation.GetMapping;
+
+import java.util.HashMap;
+import java.util.Map;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
@@ -27,14 +33,14 @@ public class PeopleControllerTest {
     private static final int VALID_PAGE_SIZE = 100;
 
     @MockBean
-    PeopleService peopleService;
+    PeopleRestService peopleRestService;
 
     @Autowired
     private MockMvc mockMvc;
 
     @Test
     public void testGetPeopleList() throws Exception {
-        when(peopleService.getPeople(VALID_PAGE_NUMBER, VALID_PAGE_SIZE)).thenReturn(new PeopleResponseModel());
+        when(peopleRestService.getPeople(VALID_PAGE_NUMBER, VALID_PAGE_SIZE)).thenReturn(new PeopleResponseModel());
 
         MvcResult result = mockMvc.perform(
                 get("/people")
@@ -48,7 +54,7 @@ public class PeopleControllerTest {
                 result.getResponse().getContentAsString(),
                 new TypeReference<>() {});
 
-        verify(peopleService).getPeople(VALID_PAGE_NUMBER, VALID_PAGE_SIZE);
+        verify(peopleRestService).getPeople(VALID_PAGE_NUMBER, VALID_PAGE_SIZE);
         assertNotNull(response);
     }
 
@@ -66,7 +72,7 @@ public class PeopleControllerTest {
         String actualErrorMessage = result.getResolvedException().getMessage();
 
         assertEquals(expectedErrorMessage, actualErrorMessage);
-        verify(peopleService, never()).getPeople(anyInt(), anyInt());
+        verify(peopleRestService, never()).getPeople(anyInt(), anyInt());
     }
 
     @Test
@@ -83,7 +89,7 @@ public class PeopleControllerTest {
         String actualErrorMessage = result.getResolvedException().getMessage();
 
         assertEquals(expectedErrorMessage, actualErrorMessage);
-        verify(peopleService, never()).getPeople(anyInt(), anyInt());
+        verify(peopleRestService, never()).getPeople(anyInt(), anyInt());
     }
 
     @Test
@@ -99,6 +105,24 @@ public class PeopleControllerTest {
         String actualErrorMessage = result.getResolvedException().getMessage();
 
         assertEquals(expectedErrorMessage, actualErrorMessage);
-        verify(peopleService, never()).getPeople(anyInt(), anyInt());
+        verify(peopleRestService, never()).getPeople(anyInt(), anyInt());
+    }
+
+    @Test
+    public void testGetPeopleEmailCharacterFrequencyCount() throws Exception {
+        Map<String, Integer> frequencyMap = new HashMap<>();
+        when(peopleRestService.getPeopleEmailCharacterFrequencyCount()).thenReturn(frequencyMap);
+
+        MvcResult result = mockMvc.perform(get("/people/frequency"))
+            .andExpect(status().isOk())
+            .andReturn();
+
+        ObjectMapper mapper = new ObjectMapper();
+        PeopleResponseModel response = mapper.readValue(
+                result.getResponse().getContentAsString(),
+                new TypeReference<>() {});
+
+        verify(peopleRestService).getPeopleEmailCharacterFrequencyCount();
+        assertNotNull(response);
     }
 }
