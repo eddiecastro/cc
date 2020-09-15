@@ -2,6 +2,7 @@ package com.curry.sldemo.service;
 
 import com.curry.sldemo.model.PeopleResponseModel;
 import com.curry.sldemo.model.Person;
+import com.curry.sldemo.model.PersonDuplicate;
 import com.curry.sldemo.model.metadata.MetadataResponseModel;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.*;
@@ -56,6 +57,12 @@ public class PeopleRestServiceImpl implements PeopleRestService {
     public Map<String, Integer> getPeopleEmailCharacterFrequencyCount() {
         List<Person> peopleList = this.getAllAvailablePeople();
         return peopleService.getEmailCharacterFrequencyCountFromPeopleList(peopleList);
+    }
+
+    @Override
+    public List<PersonDuplicate> getPossibleDuplicates() {
+        List<Person> peopleList = this.getAllAvailablePeople();
+        return peopleService.getPossibleDuplicatesFromList(peopleList);
     }
 
     //NOTE: This would need to re-evaluated in a production env. peopleList could get too big, but I know we only have access to 351 for the assessment

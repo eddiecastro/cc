@@ -1,6 +1,7 @@
 package com.curry.sldemo.service;
 
 import com.curry.sldemo.model.PeopleResponseModel;
+import com.curry.sldemo.model.PersonDuplicate;
 import com.curry.sldemo.model.metadata.MetadataResponseModel;
 import com.curry.sldemo.model.metadata.PagingMetadataResponseModel;
 import org.junit.Before;
@@ -12,6 +13,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.client.RestTemplate;
 
+import java.util.List;
 import java.util.Map;
 
 import static org.junit.Assert.assertEquals;
@@ -57,18 +59,7 @@ public class PeopleRestServiceImplTest {
     @Test
     public void getPeopleEmailCharacterFrequencyCountTest() {
         final int totalPages = 1;
-
-        PeopleResponseModel peopleResponseModel = mock(PeopleResponseModel.class);
-        MetadataResponseModel metaDataResponseModel = mock(MetadataResponseModel.class);
-        PagingMetadataResponseModel pagingMetadataResponseModel = mock(PagingMetadataResponseModel.class);
-
-        when(pagingMetadataResponseModel.getTotalPages()).thenReturn(totalPages);
-        when(metaDataResponseModel.getPaging()).thenReturn(pagingMetadataResponseModel);
-        when(peopleResponseModel.getMetadataResponseModel()).thenReturn(metaDataResponseModel);
-
-        ResponseEntity<PeopleResponseModel> responseModel = new ResponseEntity<>(peopleResponseModel, HttpStatus.OK);
-        when(restTemplate.exchange(anyString(), any(HttpMethod.class), any(), any(Class.class)))
-                .thenReturn(responseModel);
+        initializeRestTest(totalPages);
 
         Map<String, Integer> frequencyMap = systemUnderTest.getPeopleEmailCharacterFrequencyCount();
 
@@ -81,7 +72,43 @@ public class PeopleRestServiceImplTest {
     @Test
     public void getPeopleEmailCharacterFrequencyCountTest_multiplePages() {
         final int totalPages = 2;
+        initializeRestTest(totalPages);
 
+        Map<String, Integer> frequencyMap = systemUnderTest.getPeopleEmailCharacterFrequencyCount();
+
+        //verify rest call is called twice (matching total number of pages), but service only once to get frequencies
+        verify(restTemplate, times(2)).exchange(anyString(), any(HttpMethod.class), any(), any(Class.class));
+        verify(peopleService, times(1)).getEmailCharacterFrequencyCountFromPeopleList(anyList());
+        assertNotNull(frequencyMap);
+    }
+
+    @Test
+    public void getPossibleDuplicatesTest() {
+        final int totalPages = 1;
+        initializeRestTest(totalPages);
+
+        List<PersonDuplicate> duplicates = systemUnderTest.getPossibleDuplicates();
+
+        //verify rest call and service calls are only made a single time
+        verify(restTemplate, times(1)).exchange(anyString(), any(HttpMethod.class), any(), any(Class.class));
+        verify(peopleService, times(1)).getPossibleDuplicatesFromList(anyList());
+        assertNotNull(duplicates);
+    }
+
+    @Test
+    public void getPossibleDuplicatesTest_multiplePages() {
+        final int totalPages = 2;
+        initializeRestTest(totalPages);
+
+        List<PersonDuplicate> duplicates = systemUnderTest.getPossibleDuplicates();
+
+        //verify rest call is called twice (matching total number of pages), but service only once to get duplicates
+        verify(restTemplate, times(2)).exchange(anyString(), any(HttpMethod.class), any(), any(Class.class));
+        verify(peopleService, times(1)).getPossibleDuplicatesFromList(anyList());
+        assertNotNull(duplicates);
+    }
+
+    private void initializeRestTest(int totalPages) {
         PeopleResponseModel peopleResponseModel = mock(PeopleResponseModel.class);
         MetadataResponseModel metaDataResponseModel = mock(MetadataResponseModel.class);
         PagingMetadataResponseModel pagingMetadataResponseModel = mock(PagingMetadataResponseModel.class);
@@ -93,12 +120,5 @@ public class PeopleRestServiceImplTest {
         ResponseEntity<PeopleResponseModel> responseModel = new ResponseEntity<>(peopleResponseModel, HttpStatus.OK);
         when(restTemplate.exchange(anyString(), any(HttpMethod.class), any(), any(Class.class)))
                 .thenReturn(responseModel);
-
-        Map<String, Integer> frequencyMap = systemUnderTest.getPeopleEmailCharacterFrequencyCount();
-
-        //verify rest call is called twice (matching total number of pages), but service only once to get frequencies
-        verify(restTemplate, times(2)).exchange(anyString(), any(HttpMethod.class), any(), any(Class.class));
-        verify(peopleService, times(1)).getEmailCharacterFrequencyCountFromPeopleList(anyList());
-        assertNotNull(frequencyMap);
     }
 }

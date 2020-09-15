@@ -1,6 +1,7 @@
 package com.curry.sldemo.controller;
 
 import com.curry.sldemo.model.PeopleResponseModel;
+import com.curry.sldemo.model.PersonDuplicate;
 import com.curry.sldemo.service.PeopleRestService;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -8,13 +9,12 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
-import org.springframework.web.bind.annotation.GetMapping;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import static org.junit.Assert.assertEquals;
@@ -118,11 +118,29 @@ public class PeopleControllerTest {
             .andReturn();
 
         ObjectMapper mapper = new ObjectMapper();
-        PeopleResponseModel response = mapper.readValue(
+        Map<String, Integer> response = mapper.readValue(
                 result.getResponse().getContentAsString(),
                 new TypeReference<>() {});
 
         verify(peopleRestService).getPeopleEmailCharacterFrequencyCount();
+        assertNotNull(response);
+    }
+
+    @Test
+    public void testGetPossiblePeopleDuplicates() throws Exception {
+        List<PersonDuplicate> possibleDuplicates = new ArrayList<>();
+        when(peopleRestService.getPossibleDuplicates()).thenReturn(possibleDuplicates);
+
+        MvcResult result = mockMvc.perform(get("/people/duplicates"))
+                .andExpect(status().isOk())
+                .andReturn();
+
+        ObjectMapper mapper = new ObjectMapper();
+        List<PersonDuplicate> response = mapper.readValue(
+                result.getResponse().getContentAsString(),
+                new TypeReference<>() {});
+
+        verify(peopleRestService).getPossibleDuplicates();
         assertNotNull(response);
     }
 }

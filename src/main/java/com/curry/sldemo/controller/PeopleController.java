@@ -2,6 +2,7 @@ package com.curry.sldemo.controller;
 
 import com.curry.sldemo.exception.PeopleListArgumentException;
 import com.curry.sldemo.model.PeopleResponseModel;
+import com.curry.sldemo.model.PersonDuplicate;
 import com.curry.sldemo.service.PeopleRestService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpEntity;
@@ -11,6 +12,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.List;
 import java.util.Map;
 
 @RestController
@@ -38,6 +40,12 @@ public class PeopleController {
     public ResponseEntity getPeopleEmailCharacterFrequencyCount() {
         Map<String, Integer> frequencyMap = peopleRestService.getPeopleEmailCharacterFrequencyCount();
         return new ResponseEntity(frequencyMap, HttpStatus.OK);
+    }
+
+    @GetMapping("/people/duplicates")
+    public ResponseEntity getPossiblePeopleDuplicates() {
+        List<PersonDuplicate> possibleDuplicates = peopleRestService.getPossibleDuplicates();
+        return new ResponseEntity(possibleDuplicates, HttpStatus.OK);
     }
 
     private void validateGetPeopleListRequest(int page, int pageSize) {
