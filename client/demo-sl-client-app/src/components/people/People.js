@@ -1,6 +1,7 @@
 import React from 'react';
 import PeopleList from '../people-list/PeopleList';
 import Pagination from '../pagination/Pagination';
+import './People.css';
 
 class People extends React.Component {
 
@@ -12,6 +13,8 @@ class People extends React.Component {
       peopleListData: [],
       peopleMetaData: null
     };
+
+    this.getPeople = this.getPeople.bind(this);
   }
 
   componentDidMount() {
@@ -34,13 +37,13 @@ class People extends React.Component {
       return (
         <div>
           <PeopleList listOfPeople={peopleListData}></PeopleList>
-          <Pagination totalPages={this.state.peopleMetaData.paging.total_pages} />
+          <Pagination totalPages={this.state.peopleMetaData.paging.total_pages} pageChangeCallback={this.getPeople} />
         </div>
       );
     }
   }
 
-  //TODO: put in its own file 
+  //TODO: put in its own file ?
   getPeople(page, pageSize) {
     const apiUrl = "http://localhost:8080/people?page=" + page + "&page_size=" + pageSize;
 
@@ -63,14 +66,9 @@ class People extends React.Component {
       )
   }
 
-  handleResult(result, page) {
-
-    /**
-    this.state.peopleMetaData.paging
-    {current_page: 1, next_page: 2, prev_page: 0, total_pages: 4, total_count: 351}
-     */
+  getFrequencies() {
+    const apiUrl = "http://localhost:8080/people/frequency"
   }
-
 };
 
 export default People;

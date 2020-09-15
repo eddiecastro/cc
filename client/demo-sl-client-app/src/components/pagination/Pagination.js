@@ -1,48 +1,63 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import styles from './Pagination.module.css';
+import './Pagination.css';
 
 class Pagination extends React.Component {
   
   constructor(props) {
     super(props);
     this.state = {
-      totalPages: this.props.totalPages
+      totalPages: this.props.totalPages,
+      pages: []
     };
+
   }
 
   componentDidMount() {
-    // const pagesToDisplay = peopleListData.map((person) =>
-    //   <tr align="left">
-    //     <td>{person.display_name}</td>
-    //     <td>{person.email_address}</td>
-    //     <td>{person.title}</td>
-    //   </tr>
+    this.setPages(1); //load page 1 
   }
 
   render() {
     return (
-      <div class="pagination">
-        <a href="#">&laquo;</a>
-        <a href="#">1</a>
-        <a class="active" href="#">2</a>
-        <a href="#">3</a>
-        <a href="#">4</a>
-        <a href="#">5</a>
-        <a href="#">6</a>
-        <a href="#">&raquo;</a>
+      <div className='pagination'>
+        {this.state.pages}
       </div>
-    )
+    );
+  }
+
+  onChange(key) {
+    this.setPages(key); //load a different page depending on what the user clicked on
+  }
+
+  //create a new pages array with the correct page active
+  setPages(activePage) {
+    let newPages = Array.from({ length: this.state.totalPages }, (_, k) => (
+      <a 
+        key={k} href="#"
+        className={activePage === (k+1) ? 'active' : ''} 
+        onClick={() => this.onChange(k+1)}>
+          {k+1}
+      </a>
+    ));
+
+    this.setState({
+      pages: newPages
+    });
+
+    //call the callback from the parent component that will load new items for the selected page
+    this.props.pageChangeCallback(activePage, 100);
   }
 
 };
 
 Pagination.propTypes = {
   totalPages: PropTypes.number,
+  pageChangeCallback: PropTypes.func,
 }
 
 Pagination.defaultProps = {
   totalPages: 1,
+  pageChangeCallback: {}
 };
 
 export default Pagination;

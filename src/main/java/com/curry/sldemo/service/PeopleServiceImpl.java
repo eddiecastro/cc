@@ -54,6 +54,14 @@ public class PeopleServiceImpl implements PeopleService {
         }
     }
 
+    /**
+     * NOTES:
+     * There are algorithms to get string similarity. I didn't want to just copy one
+     * and since this is measuring potential duplicates instead of similarity as a whole,
+     * I thought it was better to check character by character to make sure ordering was mostly correct
+     * If too many inconsistencies are found early on in the string, I don't see a reason to continue looking
+     * Even if curry and currrrrrrrry are very similar and are the same word, I don't think the second would have been entered in by mistake
+     */
     private void processDuplicate(Person person, Person possibleDuplicate, List<PersonDuplicate> possibleDuplicates) {
         String email1 = person.getEmailAddress();
         String email2 = possibleDuplicate.getEmailAddress();

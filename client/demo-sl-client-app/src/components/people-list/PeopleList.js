@@ -1,13 +1,13 @@
 import React from 'react';
-import styles from './PeopleList.module.css';
+import './PeopleList.css';
 import PropTypes from 'prop-types';
 
 class PeopleList extends React.Component {
   render() {
     const peopleListData = this.props.listOfPeople;
 
-    const peopleList = peopleListData.map((person) =>
-        <tr align="left">
+    const peopleList = peopleListData.map((person, i) =>
+        <tr key={i} align="left">
           <td>{person.display_name}</td>
           <td>{person.email_address}</td>
           <td>{person.title}</td>
@@ -15,7 +15,7 @@ class PeopleList extends React.Component {
     );
       
     return (
-      <div className={styles.PeopleList} data-testid="PeopleList">
+      <div data-testid="PeopleList">
         <table> 
           <thead>
             <tr align="left">
