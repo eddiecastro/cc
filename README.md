@@ -12,6 +12,7 @@ To build and run and backend (Requires JAVA_HOME to be pointed at Java 11. See b
 
 To build and run react client:
 ```
+cd client
 npm install
 npm start
 ```
