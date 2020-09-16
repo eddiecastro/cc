@@ -56,6 +56,8 @@ public class PeopleRestServiceImpl implements PeopleRestService {
 
     @Override
     public List<EmailCharacterFrequency> getPeopleEmailCharacterFrequencyCount() {
+        //NOTE: This would need to re-evaluated in a production env. peopleList could get too big, but I know we only have access to 351 for the assessment
+        //A better solution would be to break this up into chunks (only pull ~1000 at a time, update frequency map, repeat). Same for duplicates
         List<Person> peopleList = this.getAllAvailablePeople();
         return peopleService.getEmailCharacterFrequencyCountFromPeopleList(peopleList);
     }
@@ -66,8 +68,6 @@ public class PeopleRestServiceImpl implements PeopleRestService {
         return peopleService.getPossibleDuplicatesFromList(peopleList);
     }
 
-    //NOTE: This would need to re-evaluated in a production env. peopleList could get too big, but I know we only have access to 351 for the assessment
-    //A better solution would be to break this up into chunks (only pull ~1000 at a time, update frequency map, repeat)
     private List<Person> getAllAvailablePeople() {
         List<Person> peopleList = new ArrayList<>();
         int currentPage = 1;

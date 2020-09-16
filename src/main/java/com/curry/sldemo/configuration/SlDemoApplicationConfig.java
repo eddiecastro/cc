@@ -16,6 +16,7 @@ public class SlDemoApplicationConfig {
     @Value("${security.cors.allowed.origin}")
     private List<String> allowedOrigins;
 
+    //Set up cors filter to allow api requests from client. May not be suitable for a production environment
     @Bean
     public CorsFilter corsFilter() {
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();

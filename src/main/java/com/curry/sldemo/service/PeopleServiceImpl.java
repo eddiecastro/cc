@@ -36,6 +36,7 @@ public class PeopleServiceImpl implements PeopleService {
         // for each person we want to check for a duplicate against each other person
         // in a production env, this would be done differently. We may want to delegate to another service that
         // could execute a SQL query for a specific person or check for duplicates upon the addition of a "Person"
+        //either way, its not maintainable to check duplicates against so many records (if the number of records ends up being in the thousands or more)
         for(int i = 0; i < peopleList.size(); i++) {
             for(int j = i+1; j < peopleList.size(); j++) {
                 processDuplicate(peopleList.get(i), peopleList.get(j), possibleDuplicates);
@@ -48,7 +49,7 @@ public class PeopleServiceImpl implements PeopleService {
     private void processEmailCharacterFrequency(HashMap<String, Integer> frequencyMap, String emailAddress) {
         for(int i = 0; i < emailAddress.length(); i++) {
             //NOTE: the assignment only said unique "character", so I'm leaving the count of symbols in the
-            //frequency map and letting capitial and non capital be unique characters
+            //frequency map and letting capital and non capital be unique characters
             String letter = String.valueOf(emailAddress.charAt(i));
 
             if(frequencyMap.containsKey(letter)) {
@@ -63,25 +64,25 @@ public class PeopleServiceImpl implements PeopleService {
     /**
      * NOTES:
      * There are algorithms to get string similarity. I didn't want to just copy one
-     * and since this is measuring potential duplicates instead of similarity as a whole,
-     * I thought it was better to check character by character to make sure ordering was mostly correct
+     * and since this is measuring potential duplicates instead of similarity in general,
+     * I thought it was better to check character by character to make sure ordering was mostly correct as well as similarity
      * If too many inconsistencies are found early on in the string, I don't see a reason to continue looking
-     * Even if curry and currrrrrrrry are very similar and are the same word, I don't think the second would have been entered in by mistake
      */
     private void processDuplicate(Person person, Person possibleDuplicate, List<PersonDuplicate> possibleDuplicates) {
         String email1 = person.getEmailAddress();
         String email2 = possibleDuplicate.getEmailAddress();
 
+        //email1 should be the longer string for the algorithm below
         if(email1.length() < email2.length()) {
             String temp = email1;
             email1 = email2;
             email2 = temp;
         }
 
-
         int difference = email1.length() - email2.length();
         int incorrectCount = 0;
 
+        //allow a larger number of differences to occur for larger strings
         int maxDifferencesForPotentialDuplicate = (int) (INCONSISTENCY_COUNT_LIMIT_PERCENTAGE * email1.length());
         if(difference <= maxDifferencesForPotentialDuplicate) {
             int email1Index = 0;
@@ -89,9 +90,21 @@ public class PeopleServiceImpl implements PeopleService {
             while(email1Index < email1.length() && email2Index < email2.length()) {
 
                 if(email1.charAt(email1Index) == email2.charAt(email2Index)) {
+                    //if the characters match, move on to the next characters in the string
                     email1Index++;
                     email2Index++;
                 } else {
+                    /**
+                     * NOTE: this won't capture all possible duplicates, just enough to present in the client application
+                     * I recognize that this isn't the complete answer, but I wanted to avoid copying an
+                     * existing algorithm/focus on getting the whole package functioning
+                     * This won't capture duplicates of strings of the same length
+                     * Given more time I could look into using an existing algorithms or focus more on improving this one
+                     * possible solutions include checking longest common subsequence (or a combination of them) or cosine similarity, etc.
+                     */
+                    //if the characters don't match, increase incorrect count
+                    //currryyyy
+                    //currtyyy
                     incorrectCount++;
                     email1Index++;
                 }

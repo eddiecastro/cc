@@ -8,9 +8,10 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 @ControllerAdvice
 public class ExceptionHandlerAdvice {
 
+    //Set up exception handler for PeopleListArgumentException for validation in PeopleController.
+    //Advice is not required but cleans up the controller some
     @ExceptionHandler(PeopleListArgumentException.class)
     public ResponseEntity handlePeopleListArgumentException(PeopleListArgumentException e) {
-        //TODO: logging
         return ResponseEntity
                 .status(HttpStatus.BAD_REQUEST)
                 .body(e.getMessage());
