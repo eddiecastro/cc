@@ -4,6 +4,7 @@ import PropTypes from 'prop-types';
 
 class PeopleList extends React.Component {
   render() {
+    //TODO: the setup for the peopleList table rows should be set up once, not every time it renders
     const peopleListData = this.props.listOfPeople;
 
     const peopleList = peopleListData.map((person, i) =>

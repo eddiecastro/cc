@@ -2,6 +2,7 @@ import React from 'react';
 import PeopleList from '../people-list/PeopleList';
 import Pagination from '../pagination/Pagination';
 import './People.css';
+import PeopleFrequency from '../people-frequency/PeopleFrequency';
 
 class People extends React.Component {
 
@@ -11,7 +12,7 @@ class People extends React.Component {
       error: null,
       isLoaded: false,
       peopleListData: [],
-      peopleMetaData: null
+      peopleMetaData: null,
     };
 
     this.getPeople = this.getPeople.bind(this);
@@ -29,21 +30,21 @@ class People extends React.Component {
     } else if (!isLoaded) {
       return <div>Loading people..</div>
     } else {
-      /**
-       * paging
-       * we load one page at a time
-       * we only need the pagination component to change numbers when clicked
-       */
       return (
-        <div>
-          <PeopleList listOfPeople={peopleListData}></PeopleList>
-          <Pagination totalPages={this.state.peopleMetaData.paging.total_pages} pageChangeCallback={this.getPeople} />
+
+        <div style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gridGap: 20 }}>
+          <div>
+            <PeopleList listOfPeople={peopleListData}></PeopleList>
+            <Pagination totalPages={this.state.peopleMetaData.paging.total_pages} pageChangeCallback={this.getPeople} />
+          </div>
+          <div>
+            <PeopleFrequency />
+          </div>
         </div>
       );
     }
   }
 
-  //TODO: put in its own file ?
   getPeople(page, pageSize) {
     const apiUrl = "http://localhost:8080/people?page=" + page + "&page_size=" + pageSize;
 
@@ -64,10 +65,6 @@ class People extends React.Component {
           });
         }
       )
-  }
-
-  getFrequencies() {
-    const apiUrl = "http://localhost:8080/people/frequency"
   }
 };
 

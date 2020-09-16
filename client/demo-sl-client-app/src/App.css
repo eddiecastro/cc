@@ -11,9 +11,3 @@
   font-size: calc(10px + 2vmin);
   color: white;
 }
-
-.App-body {
-  display: flex;
-  flex-direction: column;
-  padding: 4vh;
-}
