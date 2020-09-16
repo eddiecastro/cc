@@ -1,7 +1,8 @@
+import './People.css';
 import React from 'react';
 import PeopleList from '../people-list/PeopleList';
-import './People.css';
 import PeopleFrequency from '../people-frequency/PeopleFrequency';
+import PeopleDuplicate from '../people-duplicate/PeopleDuplicate';
 
 class People extends React.Component {
 
@@ -13,6 +14,9 @@ class People extends React.Component {
         </div>
         <div>
           <PeopleFrequency />
+        </div>
+        <div>
+          <PeopleDuplicate />
         </div>
       </div>
     );

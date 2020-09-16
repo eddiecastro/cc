@@ -2,6 +2,7 @@ import React from 'react';
 import './PeopleList.css';
 import PropTypes from 'prop-types';
 import Pagination from '../pagination/Pagination';
+import Person from '../person/Person';
 
 class PeopleList extends React.Component {
 
@@ -41,11 +42,7 @@ class PeopleList extends React.Component {
 
   handleResult(result) {
     const peopleList = result.data.map((person, i) => 
-      <tr key={i} align="left">
-        <td>{person.display_name}</td>
-        <td>{person.email_address}</td>
-        <td>{person.title}</td>
-      </tr>
+      <Person key={i} person={person} />
     );
 
     this.setState({
