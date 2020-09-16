@@ -5,24 +5,26 @@ import com.curry.sldemo.model.PeopleResponseModel;
 import com.curry.sldemo.model.PersonDuplicate;
 import com.curry.sldemo.model.metadata.MetadataResponseModel;
 import com.curry.sldemo.model.metadata.PagingMetadataResponseModel;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.client.RestTemplate;
 
 import java.util.List;
-import java.util.Map;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.Mockito.*;
 import static org.mockito.MockitoAnnotations.initMocks;
 
+@ExtendWith(MockitoExtension.class)
 public class PeopleRestServiceImplTest {
 
     private static final int REQUESTED_PAGE = 1;
@@ -38,7 +40,7 @@ public class PeopleRestServiceImplTest {
     @InjectMocks
     private PeopleRestServiceImpl systemUnderTest;
 
-    @Before
+    @BeforeEach
     public void init() {
         systemUnderTest = new PeopleRestServiceImpl(restTemplate, peopleService);
         systemUnderTest.apiUrl = API_URL;

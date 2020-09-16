@@ -3,19 +3,21 @@ package com.curry.sldemo.service;
 import com.curry.sldemo.model.EmailCharacterFrequency;
 import com.curry.sldemo.model.Person;
 import com.curry.sldemo.model.PersonDuplicate;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
+import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
-import static org.junit.Assert.*;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 import static org.mockito.MockitoAnnotations.initMocks;
 
+@ExtendWith(MockitoExtension.class)
 public class PeopleServiceImplTest {
 
     private static final String FREQUENCY_TEST_EMAIL = "aaAbd@d.co";
@@ -25,7 +27,7 @@ public class PeopleServiceImplTest {
     @InjectMocks
     private PeopleServiceImpl systemUnderTest;
 
-    @Before
+    @BeforeEach
     public void init() {
         peopleList = new ArrayList<>();
         systemUnderTest = new PeopleServiceImpl();
