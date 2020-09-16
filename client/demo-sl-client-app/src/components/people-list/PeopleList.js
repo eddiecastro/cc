@@ -76,7 +76,7 @@ class PeopleList extends React.Component {
               {peopleListData}
             </tbody>
           </table>
-          <Pagination totalPages={peopleMetaData.paging.total_pages} pageChangeCallback={this.getPeople} />
+          <Pagination data-testid="Pagination" totalPages={peopleMetaData.paging.total_pages} pageChangeCallback={this.getPeople} />
         </div>
       );
     }

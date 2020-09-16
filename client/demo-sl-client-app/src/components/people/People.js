@@ -10,13 +10,13 @@ class People extends React.Component {
     return (
       <div className="people-container" style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gridGap: 20 }}>
         <div>
-          <PeopleList/>
+          <PeopleList data-testid="PeopleList" />
         </div>
         <div>
-          <PeopleFrequency />
+          <PeopleFrequency data-testid="PeopleList"/>
         </div>
         <div>
-          <PeopleDuplicate />
+          <PeopleDuplicate data-testid="PeopleList" />
         </div>
       </div>
     );

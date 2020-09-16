@@ -1,14 +1,28 @@
 import React from 'react';
-import { render, screen } from '@testing-library/react';
-import '@testing-library/jest-dom/extend-expect';
+import { render, unmountComponentAtNode } from "react-dom";
+import { act } from "react-dom/test-utils";
+
 import People from './People';
 
-describe('<People />', () => {
-  test('it should mount', () => {
-    render(<People />);
-    
-    const people = screen.getByTestId('People');
+let container = null;
+beforeEach(() => {
+  // setup a DOM element as a render target
+  container = document.createElement("div");
+  document.body.appendChild(container);
+});
 
-    expect(people).toBeInTheDocument();
+afterEach(() => {
+  // cleanup on exiting
+  unmountComponentAtNode(container);
+  container.remove();
+  container = null;
+});
+
+it("renders", () => {
+  act(() => {
+    render(<People />, container);
   });
+  expect(container.querySelector("[data-testid='PeopleList']"));
+  expect(container.querySelector("[data-testid='PeopleFrequency']"));
+  expect(container.querySelector("[data-testid='PeopleDuplicate']"));
 });

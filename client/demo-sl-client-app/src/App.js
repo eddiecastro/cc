@@ -11,7 +11,7 @@ function App() {
         </p>
       </header>
       <div className="App-body">
-        <People/>
+        <People data-testid="People"/>
       </div>
     </div>
   );

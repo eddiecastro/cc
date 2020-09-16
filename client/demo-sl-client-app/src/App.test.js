@@ -22,5 +22,6 @@ it("renders", () => {
   act(() => {
     render(<App />, container);
   });
-  expect(container.header).toBe('SL Coding Assessment');
+  expect(container.querySelector("header").textContent).toBe('SL Coding Assessment');
+  expect(container.querySelector("[data-testid='People']"));
 });

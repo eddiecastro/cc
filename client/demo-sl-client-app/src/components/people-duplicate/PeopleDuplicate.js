@@ -16,14 +16,14 @@ class PeopleDuplicate extends React.Component {
   render() {
     if (this.state.buttonClicked === false) {
       return (
-        <button onClick={this.getDuplicates}>
+        <button data-testid="Button" onClick={this.getDuplicates}>
           Show potential duplicates
         </button>
       );
     } else {
       return (
         <div>
-          <button onClick={this.getDuplicates}>
+          <button data-testid="Button" onClick={this.getDuplicates}>
             Hide potential duplicates
           </button>
           <div data-testid="PeopleDuplicate"></div>
