@@ -1,7 +1,5 @@
 import React from 'react';
 import './PeopleDuplicate.css';
-import Person from '../person/Person';
-import PropTypes from 'prop-types';
 
 class PeopleDuplicate extends React.Component {
 
@@ -65,12 +63,12 @@ class PeopleDuplicate extends React.Component {
   handleDuplicateResult(result) {
     const duplicates = result.map((r, i) => {
       return (
-        <div key={i} className="duplicate-container">
-          <tr align="left">
-           <td>Duplicate {i}</td>
-          </tr>
-          <Person person={r.duplicate1} />
-          <Person person={r.duplicate2} />
+        <div key={i} className="duplicate-container" data-testid="PeopleDuplicate">
+          Duplicate {i}
+          <div style={{ display: "grid", gridTemplateColumns: "repeat(2, 1fr)", gridGap: 20}}>
+            {this.getDuplicate(r.duplicate1)}
+            {this.getDuplicate(r.duplicate2)}
+          </div>
         </div>
       )
     });
@@ -80,12 +78,16 @@ class PeopleDuplicate extends React.Component {
       buttonClicked: true
     });
   }
-};
 
-PeopleDuplicate.propTypes = {
-}
-
-PeopleDuplicate.defaultProps = {
+  getDuplicate(duplicate) {
+    return (
+      <div>
+        <div>Name:  {duplicate.display_name}</div>
+        <div>Email: {duplicate.email_address}</div>
+        <div>Title: {duplicate.title}</div>
+      </div>
+    )
+  }
 };
 
 export default PeopleDuplicate;

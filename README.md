@@ -11,4 +11,6 @@ To build and run and backend (Requires Java 11):
 ```
 
 To build and run react client:
-TODO:
+```
+npm start
+```

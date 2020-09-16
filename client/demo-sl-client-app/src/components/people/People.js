@@ -8,7 +8,7 @@ class People extends React.Component {
 
   render() {
     return (
-      <div style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gridGap: 20 }}>
+      <div className="people-container" style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gridGap: 20 }}>
         <div>
           <PeopleList/>
         </div>

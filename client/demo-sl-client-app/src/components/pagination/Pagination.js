@@ -32,12 +32,9 @@ class Pagination extends React.Component {
   //create a new pages array with the correct page active
   setPages(activePage) {
     let newPages = Array.from({ length: this.state.totalPages }, (_, k) => (
-      <a 
-        key={k} href="#"
-        className={activePage === (k+1) ? 'active' : ''} 
-        onClick={() => this.onChange(k+1)}>
-          {k+1}
-      </a>
+      <button key={k} className={activePage === (k+1) ? 'active' : ''} onClick={() => this.onChange(k+1)}>
+        {k+1}
+      </button>
     ));
 
     this.setState({

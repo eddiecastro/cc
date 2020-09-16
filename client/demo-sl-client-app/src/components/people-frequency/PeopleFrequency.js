@@ -1,6 +1,5 @@
 import React from 'react';
 import './PeopleFrequency.css';
-import PropTypes from 'prop-types';
 
 class PeopleFrequency extends React.Component {
 
@@ -75,12 +74,6 @@ class PeopleFrequency extends React.Component {
       buttonClicked: true
     });
   }
-};
-
-PeopleFrequency.propTypes = {
-}
-
-PeopleFrequency.defaultProps = {
 };
 
 export default PeopleFrequency;

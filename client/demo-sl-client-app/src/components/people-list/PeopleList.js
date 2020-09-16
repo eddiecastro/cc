@@ -1,8 +1,6 @@
 import React from 'react';
 import './PeopleList.css';
-import PropTypes from 'prop-types';
 import Pagination from '../pagination/Pagination';
-import Person from '../person/Person';
 
 class PeopleList extends React.Component {
 
@@ -42,7 +40,11 @@ class PeopleList extends React.Component {
 
   handleResult(result) {
     const peopleList = result.data.map((person, i) => 
-      <Person key={i} person={person} />
+      <tr key={i} data-testid="Person" align="left">
+        <td>{person.display_name}</td>
+        <td>{person.email_address}</td>
+        <td>{person.title}</td>
+      </tr>
     );
 
     this.setState({
@@ -74,17 +76,11 @@ class PeopleList extends React.Component {
               {peopleListData}
             </tbody>
           </table>
-          <Pagination totalPages={this.state.peopleMetaData.paging.total_pages} pageChangeCallback={this.getPeople} />
+          <Pagination totalPages={peopleMetaData.paging.total_pages} pageChangeCallback={this.getPeople} />
         </div>
       );
     }
   }
-};
-
-PeopleList.propTypes = {
-}
-
-PeopleList.defaultProps = {
 };
 
 export default PeopleList;
