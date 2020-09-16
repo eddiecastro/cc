@@ -70,7 +70,7 @@ class PeopleFrequency extends React.Component {
       console.log(value);
 
       return (
-        <div>{key} - {value}</div>
+        <div>{key}  -  {value}</div>
       )
     });
 
