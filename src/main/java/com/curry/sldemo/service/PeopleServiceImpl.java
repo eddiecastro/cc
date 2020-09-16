@@ -1,5 +1,6 @@
 package com.curry.sldemo.service;
 
+import com.curry.sldemo.model.EmailCharacterFrequency;
 import com.curry.sldemo.model.Person;
 import com.curry.sldemo.model.PersonDuplicate;
 import org.springframework.stereotype.Service;
@@ -13,14 +14,19 @@ public class PeopleServiceImpl implements PeopleService {
     private static final float INCONSISTENCY_COUNT_LIMIT_PERCENTAGE = 0.20f;
 
     @Override
-    public Map<String, Integer> getEmailCharacterFrequencyCountFromPeopleList(List<Person> peopleList) {
+    public List<EmailCharacterFrequency> getEmailCharacterFrequencyCountFromPeopleList(List<Person> peopleList) {
         HashMap<String, Integer> frequencyMap = new HashMap<>();
 
         for(Person person : peopleList) {
             processEmailCharacterFrequency(frequencyMap, person.getEmailAddress());
         }
 
-        return frequencyMap;
+        List<EmailCharacterFrequency> emailCharacterFrequencies = new ArrayList<>();
+        for(String key : frequencyMap.keySet()) {
+            emailCharacterFrequencies.add(new EmailCharacterFrequency(key, frequencyMap.get(key)));
+        }
+
+        return emailCharacterFrequencies;
     }
 
     @Override
@@ -29,7 +35,7 @@ public class PeopleServiceImpl implements PeopleService {
 
         // for each person we want to check for a duplicate against each other person
         // in a production env, this would be done differently. We may want to delegate to another service that
-        // could execute a SQL query for a specific person or check for duplicates upon the addition of a "Person" and mark it as such
+        // could execute a SQL query for a specific person or check for duplicates upon the addition of a "Person"
         for(int i = 0; i < peopleList.size(); i++) {
             for(int j = i+1; j < peopleList.size(); j++) {
                 processDuplicate(peopleList.get(i), peopleList.get(j), possibleDuplicates);

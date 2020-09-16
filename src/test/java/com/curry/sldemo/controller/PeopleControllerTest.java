@@ -1,5 +1,6 @@
 package com.curry.sldemo.controller;
 
+import com.curry.sldemo.model.EmailCharacterFrequency;
 import com.curry.sldemo.model.PeopleResponseModel;
 import com.curry.sldemo.model.PersonDuplicate;
 import com.curry.sldemo.service.PeopleRestService;
@@ -110,15 +111,15 @@ public class PeopleControllerTest {
 
     @Test
     public void testGetPeopleEmailCharacterFrequencyCount() throws Exception {
-        Map<String, Integer> frequencyMap = new HashMap<>();
-        when(peopleRestService.getPeopleEmailCharacterFrequencyCount()).thenReturn(frequencyMap);
+        List<EmailCharacterFrequency> frequencies = new ArrayList<>();
+        when(peopleRestService.getPeopleEmailCharacterFrequencyCount()).thenReturn(frequencies);
 
         MvcResult result = mockMvc.perform(get("/people/frequency"))
             .andExpect(status().isOk())
             .andReturn();
 
         ObjectMapper mapper = new ObjectMapper();
-        Map<String, Integer> response = mapper.readValue(
+        List<EmailCharacterFrequency> response = mapper.readValue(
                 result.getResponse().getContentAsString(),
                 new TypeReference<>() {});
 

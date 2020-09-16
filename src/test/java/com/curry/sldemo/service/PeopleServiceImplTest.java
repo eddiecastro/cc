@@ -1,5 +1,6 @@
 package com.curry.sldemo.service;
 
+import com.curry.sldemo.model.EmailCharacterFrequency;
 import com.curry.sldemo.model.Person;
 import com.curry.sldemo.model.PersonDuplicate;
 import org.junit.Before;
@@ -34,10 +35,10 @@ public class PeopleServiceImplTest {
 
     @Test
     public void testGetEmailCharacterFrequencyCountFromPeopleList_emptyList() {
-        Map<String, Integer> result = systemUnderTest.getEmailCharacterFrequencyCountFromPeopleList(peopleList);
+        List<EmailCharacterFrequency> frequencies = systemUnderTest.getEmailCharacterFrequencyCountFromPeopleList(peopleList);
 
-        assertNotNull(result);
-        assertTrue(result.keySet().isEmpty());
+        assertNotNull(frequencies);
+        assertTrue(frequencies.isEmpty());
     }
 
     @Test
@@ -47,10 +48,10 @@ public class PeopleServiceImplTest {
         int expectedACount = 2;
         int expectedCapitalACount = 1;
 
-        Map<String, Integer> result = systemUnderTest.getEmailCharacterFrequencyCountFromPeopleList(peopleList);
+        List<EmailCharacterFrequency> frequencies = systemUnderTest.getEmailCharacterFrequencyCountFromPeopleList(peopleList);
 
-        assertEquals((int)result.get("a"), expectedACount);
-        assertEquals((int)result.get("A"), expectedCapitalACount);
+        assertEquals(findEmailCharacterFrequencyInList(frequencies, "a"), expectedACount);
+        assertEquals(findEmailCharacterFrequencyInList(frequencies, "A"), expectedCapitalACount);
     }
 
     @Test
@@ -60,10 +61,10 @@ public class PeopleServiceImplTest {
         int expectedAtSymbolCount = 1;
         int expectedPeriodCount = 1;
 
-        Map<String, Integer> result = systemUnderTest.getEmailCharacterFrequencyCountFromPeopleList(peopleList);
+        List<EmailCharacterFrequency> frequencies = systemUnderTest.getEmailCharacterFrequencyCountFromPeopleList(peopleList);
 
-        assertEquals((int)result.get("@"), expectedAtSymbolCount);
-        assertEquals((int)result.get("."), expectedPeriodCount);
+        assertEquals(findEmailCharacterFrequencyInList(frequencies, "@"), expectedAtSymbolCount);
+        assertEquals(findEmailCharacterFrequencyInList(frequencies, "."), expectedPeriodCount);
     }
 
     @Test
@@ -73,10 +74,10 @@ public class PeopleServiceImplTest {
         int expectedCCount = 1;
         int expectedDCount = 2;
 
-        Map<String, Integer> result = systemUnderTest.getEmailCharacterFrequencyCountFromPeopleList(peopleList);
+        List<EmailCharacterFrequency> frequencies = systemUnderTest.getEmailCharacterFrequencyCountFromPeopleList(peopleList);
 
-        assertEquals((int)result.get("c"), expectedCCount);
-        assertEquals((int)result.get("d"), expectedDCount);
+        assertEquals(findEmailCharacterFrequencyInList(frequencies, "c"), expectedCCount);
+        assertEquals(findEmailCharacterFrequencyInList(frequencies, "d"), expectedDCount);
     }
 
     @Test
@@ -158,5 +159,15 @@ public class PeopleServiceImplTest {
         when(person2.getEmailAddress()).thenReturn(email2);
         peopleList.add(person1);
         peopleList.add(person2);
+    }
+
+    private int findEmailCharacterFrequencyInList(List<EmailCharacterFrequency> frequencies, String character) {
+        for(EmailCharacterFrequency frequency : frequencies) {
+            if(frequency.getEmailCharacter().equals(character)) {
+                return frequency.getFrequency();
+            }
+        }
+
+        return -1;
     }
 }

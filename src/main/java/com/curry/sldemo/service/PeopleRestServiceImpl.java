@@ -1,5 +1,6 @@
 package com.curry.sldemo.service;
 
+import com.curry.sldemo.model.EmailCharacterFrequency;
 import com.curry.sldemo.model.PeopleResponseModel;
 import com.curry.sldemo.model.Person;
 import com.curry.sldemo.model.PersonDuplicate;
@@ -54,7 +55,7 @@ public class PeopleRestServiceImpl implements PeopleRestService {
     }
 
     @Override
-    public Map<String, Integer> getPeopleEmailCharacterFrequencyCount() {
+    public List<EmailCharacterFrequency> getPeopleEmailCharacterFrequencyCount() {
         List<Person> peopleList = this.getAllAvailablePeople();
         return peopleService.getEmailCharacterFrequencyCountFromPeopleList(peopleList);
     }

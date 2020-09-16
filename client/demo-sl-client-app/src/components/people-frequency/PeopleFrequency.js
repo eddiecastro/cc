@@ -62,15 +62,11 @@ class PeopleFrequency extends React.Component {
   }
 
   handleFrequencyResult(result) {
-    const frequencyData = result;
-    console.log('break');
+    result.sort((a, b) => b.frequency - a.frequency); //TODO: could be used by user to sort asc or desc in future. for now, desc
 
-    const frequencies = Object.entries(frequencyData).map(([key, value]) => {
-      console.log(key);
-      console.log(value);
-
+    const frequencies = result.map((r) => {
       return (
-        <div>{key}  -  {value}</div>
+        <div key={r.emailCharacter}>{r.emailCharacter}  -  {r.frequency}</div>
       )
     });
 

@@ -5,10 +5,6 @@ import PeopleFrequency from '../people-frequency/PeopleFrequency';
 
 class People extends React.Component {
 
-  constructor(props) {
-    super(props);
-  }
-
   render() {
     return (
       <div style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gridGap: 20 }}>

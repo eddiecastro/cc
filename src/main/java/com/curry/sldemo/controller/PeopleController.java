@@ -1,6 +1,7 @@
 package com.curry.sldemo.controller;
 
 import com.curry.sldemo.exception.PeopleListArgumentException;
+import com.curry.sldemo.model.EmailCharacterFrequency;
 import com.curry.sldemo.model.PeopleResponseModel;
 import com.curry.sldemo.model.PersonDuplicate;
 import com.curry.sldemo.service.PeopleRestService;
@@ -38,8 +39,8 @@ public class PeopleController {
 
     @GetMapping("/people/frequency")
     public ResponseEntity getPeopleEmailCharacterFrequencyCount() {
-        Map<String, Integer> frequencyMap = peopleRestService.getPeopleEmailCharacterFrequencyCount();
-        return new ResponseEntity(frequencyMap, HttpStatus.OK);
+        List<EmailCharacterFrequency> frequencies = peopleRestService.getPeopleEmailCharacterFrequencyCount();
+        return new ResponseEntity(frequencies, HttpStatus.OK);
     }
 
     @GetMapping("/people/duplicates")
