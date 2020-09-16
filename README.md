@@ -10,7 +10,7 @@ To build and run and backend (Requires JAVA_HOME to be pointed at Java 11. See b
 ./mvnw spring-boot:run
 ```
 
-To build and run react client:
+To build and run react client (I used npm version 6.4.1 and node version 10.14.2):
 ```
 cd client/demo-sl-client-app
 npm install
