@@ -1,4 +1,4 @@
-# demo-sl-app
+# Run demo-sl-app
 
 For authentication, add the following line with the API key in ~/.bash_profile
 ```
@@ -14,3 +14,16 @@ To build and run react client:
 ```
 npm start
 ```
+
+
+# Testing
+For the Spring Boot app:
+```
+./mvnw test
+```
+
+For react:
+```
+npm test
+```
+Then press 'a' to run all tests
